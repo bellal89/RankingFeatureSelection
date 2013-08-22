@@ -4,7 +4,7 @@ from FeatureVector import FeatureVector
 from RankFilter import RankFilter
 import matplotlib.pyplot as plt
 
-features_file_name = "RankLib/SolrTrain.txt"
+features_file_name = "RankLib/SolrTrain_57.txt"
 
 def parse(line):
 	parts = line.split('#')[0].strip().split(' ')
@@ -24,8 +24,6 @@ def gen_plot(ranker):
 	clear_folder("RankLib/Results")
 	x = []
 	y = []
-	y2 = []
-	y3 = []
 	for i in xrange(1, len(sorted_weights) + 1):
 		score = get_test_ndcg(i)
 		print(i)
@@ -40,10 +38,10 @@ def gen_plot(ranker):
 	plt.ylabel('NDCG@10')
 	# plt.legend(str(ranker))
 	# Save the figure in a separate file
-	plt.savefig("RankLib/Relief_ranker_.png")
+	plt.savefig("RankLib/" + features_file_name + ".png")
 
 def get_test_ndcg(features_count):
-	cmd = "java -jar RankLib/RankLib.jar -train " + features_file_name + " -feature RankLib/SelectedFeatureSets/" + str(features_count) + " -ranker 6 -metric2t NDCG@10 -tts 0.65 > RankLib/Results/" + str(features_count)
+	cmd = "java -jar RankLib/RankLib.jar -train " + features_file_name + " -feature RankLib/SelectedFeatureSets/" + str(features_count) + " -ranker 6 -metric2t NDCG@10 -tts 0.65 -sparse > RankLib/Results/" + str(features_count)
 	os.system(cmd)
 	f = open("RankLib/Results/" + str(features_count), 'r')
 	ndcg = float(f.readlines()[-1].split(':')[1].strip())
